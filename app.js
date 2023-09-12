@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3001;
 const admin = require('firebase-admin');
+const bcrypt = require('bcrypt');
+
 
 const serviceAccount = require('/etc/secrets/FIREBASE_ENV.json');
 app.use((req, res, next) => {
@@ -13,6 +15,37 @@ app.use((req, res, next) => {
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     storageBucket: process.env.STORAGE_LINK,
+});
+
+app.post("/api/auth", (req, res) => {
+    userInput = req.body.text;
+    const db = admin.firestore();
+    const docRef = db.collection('test').doc('BigBalls');
+
+    docRef.get()
+        .then((doc) => {
+            if (doc.exists) {
+                const data = doc.data();
+                bcrypt.compare(userInput, data['key1'], (err, result) => {
+                    if (err || !result) {
+                        console.log('Auth failed')
+                        return res.status(401).json({ message: 'Authentication failed' });
+                    } else {
+                        console.log('Auth successful')
+                        return res.json({ message: 'Authentication successful' });
+                    }
+                    // Authentication successful
+                    
+                })
+            } else {
+                res.json({ "data": "data not found" });
+            }
+        })
+        .catch((error) => {
+            console.log('Error getting document:', error);
+            res.status(500).json({ "error": "Internal Server Error" });
+        });
+    
 });
 
 app.get("/api", (req, res) => {
