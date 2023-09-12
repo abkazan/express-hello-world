@@ -3,7 +3,9 @@ const app = express();
 const port = process.env.PORT || 3001;
 const admin = require('firebase-admin');
 const bcrypt = require('bcrypt');
+const bodyParser = require('body-parser');
 
+app.use(bodyParser.json());
 
 const serviceAccount = require('/etc/secrets/FIREBASE_ENV.json');
 app.use((req, res, next) => {
