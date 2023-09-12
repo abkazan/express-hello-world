@@ -29,21 +29,21 @@ app.post("/auth", (req, res) => {
                 bcrypt.compare(userInput, data['key1'], (err, result) => {
                     if (err || !result) {
                         console.log('Auth failed')
-                        return res.status(401).json({ message: 'Authentication failed' });
+                        return res.status(401).json({ "message": 'Authentication failed' });
                     } else {
                         console.log('Auth successful')
-                        return res.json({ message: 'Authentication successful' });
+                        return res.json({ "message": 'Authentication successful' });
                     }
                     // Authentication successful
                     
                 })
             } else {
-                res.json({ "data": "data not found" });
+                res.json({ "message": "data not found" });
             }
         })
         .catch((error) => {
             console.log('Error getting document:', error);
-            res.status(500).json({ "error": "Internal Server Error" });
+            res.status(500).json({ "message": "Internal Server Error" });
         });
     
 });
