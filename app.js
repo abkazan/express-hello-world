@@ -35,16 +35,10 @@ app.get("/api", (req, res) => {
 
 });
 
-
-
-app.get("/", (req, res) => res.send({"message": "hello fucker"}));
+app.get("/", (req, res) => res.send({"message": "hello from the server!"}));
 
 const test = process.env.TEST;
-app.get('/test', (req, res) => {
-  res.send({"testEnv": test});
-  console.log(typeof serviceAccount);
-  console.log(serviceAccount);
-});
+
 
 const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
