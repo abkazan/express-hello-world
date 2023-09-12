@@ -17,7 +17,7 @@ admin.initializeApp({
     storageBucket: process.env.STORAGE_LINK,
 });
 
-app.post("/api/auth", (req, res) => {
+app.post("/auth", (req, res) => {
     userInput = req.body.text;
     const db = admin.firestore();
     const docRef = db.collection('test').doc('BigBalls');
