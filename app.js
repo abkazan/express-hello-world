@@ -9,6 +9,11 @@ app.use((req, res, next) => {
 
 app.get("/", (req, res) => res.send({"message": "hello fucker"}));
 
+const test = process.env.TEST;
+app.get('/test', (req, res) => {
+  res.send({"testEnv": test});
+});
+
 const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
 server.keepAliveTimeout = 120 * 1000;
