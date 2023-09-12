@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3001;
+const admin = require('firebase-admin');
 
 const serviceAccount = require('/etc/secrets/FIREBASE_ENV.json');
 app.use((req, res, next) => {
