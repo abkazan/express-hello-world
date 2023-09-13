@@ -21,7 +21,7 @@ admin.initializeApp({
 
 app.post("/auth", (req, res) => {
     userInput = req.body.text;
-    console.log('made it here: ', userInput);
+    // console.log('made it here: ', userInput);
     const db = admin.firestore();
     const docRef = db.collection('test').doc('BigBalls');
 
