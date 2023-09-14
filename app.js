@@ -4,6 +4,8 @@ const port = process.env.PORT || 3001;
 const admin = require('firebase-admin');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
+const Multer = require('multer');
+const sharp = require('sharp');
 
 app.use(bodyParser.json());
 
@@ -85,6 +87,40 @@ app.get("/api", (req, res) => {
             res.status(500).json({ "error": "Internal Server Error" });
         });
 
+});
+
+const upload = Multer({ storage: Multer.memoryStorage() });
+
+app.post("/api/upload", upload.single('image'), async (req, res, next) => {
+
+    // Get the uploaded file object
+    const fileBuffer = req.file.buffer;
+    const name = req.body.name;
+    console.log(name);
+    try {
+        const webpBuffer = await sharp(fileBuffer).webp().toBuffer();
+        const bucket = admin.storage().bucket();
+
+        const fileRef = bucket.file(req.file.originalname.replace(/\.[^.]+$/, '.webp'));
+        await fileRef.createWriteStream().end(webpBuffer);
+        console.log("WebP image uploaded to storage");
+        fileRef.getSignedUrl({
+            action: 'read',
+            expires: '03-17-2028' // Your expiration date goes here
+        }).then((url) => {
+            // Store the URL in Firestore
+            admin.firestore().collection('test').doc('changeCurrentImage').update({
+                [name]: url[0]
+            });
+            console.log("image url uploaded to firestore");
+            res.send('File Uploaded Successfully');
+        }).catch((error) => {
+            console.error('Error updating document:', error);
+        });
+
+    } catch (error) {
+        console.log('Error processing/loading webp image', error);
+    }
 });
 
 app.get("/", (req, res) => res.send({"message": "hello from the server!"}));
