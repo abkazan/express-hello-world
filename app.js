@@ -51,6 +51,22 @@ app.post("/auth", (req, res) => {
     
 });
 
+app.get("/getCurrentImage", (req, res) => {
+    const db = admin.firestore();
+    const docRef = db.collection('test').doc('changeCurrentImage');
+    docRef.get().then((doc) => {
+        if (doc.exists) {
+            const data = doc.data();
+            res.json({ "data": data });
+        } else {
+            res.json({ "data": [] });
+        }
+    }).catch((error) => {
+        console.log('Error getting document:', error);
+        res.status(500).json({ "error": "Internal Server Error" });
+    })
+});
+
 app.get("/api", (req, res) => {
     const db = admin.firestore();
     const docRef = db.collection('test').doc('testData');
