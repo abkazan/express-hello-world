@@ -92,26 +92,63 @@ app.get("/api", (req, res) => {
 const upload = Multer({ storage: Multer.memoryStorage() });
 
 app.post("/api/upload", upload.single('image'), async (req, res, next) => {
-
     // Get the uploaded file object
+    
     const fileBuffer = req.file.buffer;
-    const name = req.body.name;
-    console.log(name);
+    const location = req.body.location;
+    
     try {
         const webpBuffer = await sharp(fileBuffer).webp().toBuffer();
         const bucket = admin.storage().bucket();
 
         const fileRef = bucket.file(req.file.originalname.replace(/\.[^.]+$/, '.webp'));
         await fileRef.createWriteStream().end(webpBuffer);
+        
         console.log("WebP image uploaded to storage");
         fileRef.getSignedUrl({
             action: 'read',
             expires: '03-17-2028' // Your expiration date goes here
         }).then((url) => {
             // Store the URL in Firestore
-            admin.firestore().collection('test').doc('changeCurrentImage').update({
-                [name]: url[0]
-            });
+            if (location === 'profile') {
+                admin.firestore().collection('test').doc('changeCurrentImage').update({
+                    [req.body.name]: url[0]
+                });
+            } else if (location === 'podcasts') {
+                console.log('made it here')
+                admin.firestore().collection('test').doc('podcasts').get().then(doc => {
+                    const data = doc.data();
+                    const newData = [...data['data']];
+                    newData[parseInt(req.body.name, 10)].image = url[0];
+                    admin.firestore().collection('test').doc('podcasts').update({
+                        data: newData
+                    });
+                })
+                
+            } else {
+                docRef =  admin.firestore().collection('test').doc('podcasts');
+                docRef.get()
+                .then((doc) => {
+                    //console.log('req body: ', req.body);
+                    if (doc.exists) {
+                        const existingData = doc.data()
+                        console.log(existingData.data.length)
+                        const newData = [
+                            {
+                                title: req.body.title,
+                                desc: req.body.description,
+                                image: url[0],
+                                spotify_link: req.body.spotifyLink,
+                                apple_link: req.body.appleLink,
+                                episode: existingData.data.length + 1
+                            },
+                            ...existingData.data,
+                        ];
+                        docRef.update( {data: newData} );
+                        
+                    }
+                })
+            }
             console.log("image url uploaded to firestore");
             res.send('File Uploaded Successfully');
         }).catch((error) => {
