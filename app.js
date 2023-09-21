@@ -123,6 +123,21 @@ app.post("/api/upload", upload.single('image'), async (req, res, next) => {
     }
 });
 
+app.get('/api/getPodcasts', (req, res) => {
+    const db = admin.firestore();
+    db.collection('test').doc('podcasts').get().then((doc) => {
+        if (doc.exists) {
+            const data = doc.data().data;
+            res.json({ data });
+        } else {
+            res.json({ "podcasts": [] });
+        }
+    }).catch((error) => {
+        console.log('Error getting document:', error);
+        res.status(500).json({ "error": "Internal Server Error" });
+    })
+});
+
 app.get("/", (req, res) => res.send({"message": "hello from the server!"}));
 
 const test = process.env.TEST;
