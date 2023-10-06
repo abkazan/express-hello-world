@@ -96,6 +96,7 @@ app.post("/api/upload", upload.single('image'), async (req, res, next) => {
     
     const fileBuffer = req.file.buffer;
     const location = req.body.location;
+    let retUrl = "";
     
     try {
         const webpBuffer = await sharp(fileBuffer).webp().toBuffer();
@@ -109,6 +110,7 @@ app.post("/api/upload", upload.single('image'), async (req, res, next) => {
             action: 'read',
             expires: '03-17-2028' // Your expiration date goes here
         }).then((url) => {
+            retUrl = url[0];
             // Store the URL in Firestore
             if (location === 'profile') {
                 admin.firestore().collection('test').doc('changeCurrentImage').update({
@@ -150,7 +152,7 @@ app.post("/api/upload", upload.single('image'), async (req, res, next) => {
                 })
             }
             console.log("image url uploaded to firestore");
-            res.send('File Uploaded Successfully');
+            res.send(['File Uploaded Successfully', retUrl]);
         }).catch((error) => {
             console.error('Error updating document:', error);
         });
