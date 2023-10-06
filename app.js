@@ -163,6 +163,7 @@ app.post("/api/upload", upload.single('image'), async (req, res, next) => {
 });
 
 app.get('/api/getPodcasts', (req, res) => {
+    console.log('made it to the endpoint');
     const db = admin.firestore();
     db.collection('test').doc('podcasts').get().then((doc) => {
         if (doc.exists) {
