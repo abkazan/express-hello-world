@@ -167,6 +167,7 @@ app.get('/api/getPodcasts', (req, res) => {
     db.collection('test').doc('podcasts').get().then((doc) => {
         if (doc.exists) {
             const data = doc.data().data;
+            console.log('doc found');
             res.json({ data });
         } else {
             res.json({ "podcasts": [] });
