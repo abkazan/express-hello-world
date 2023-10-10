@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const Multer = require('multer');
 const sharp = require('sharp');
+const uuid = require('uuid');
 
 app.use(bodyParser.json());
 
@@ -29,7 +30,8 @@ admin.initializeApp({
 });
 
 app.post("/auth", (req, res) => {
-    userInput = req.body.text;
+    const sessionId = uuid.v4();
+    const userInput = req.body.text;
     // console.log('made it here: ', userInput);
     const db = admin.firestore();
     const docRef = db.collection('test').doc('BigBalls');
@@ -43,8 +45,15 @@ app.post("/auth", (req, res) => {
                         console.log('Auth failed')
                         return res.status(401).json({ "message": 'Authentication failed' });
                     } else {
-                        console.log('Auth successful')
+                        console.log('Auth successful');
+                        res.cookie('sessionId', sessionId, {
+                            httpOnly: true,
+                            secure: true,
+                            sameSite: 'strict',
+                            maxAge: 24 * 60 * 60 * 1000,
+                        });
                         return res.json({ "message": 'Authentication successful' });
+                        
                     }
                     // Authentication successful
                     
