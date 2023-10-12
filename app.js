@@ -29,7 +29,10 @@ app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     console.log('Request IP:', req.ip);
-    console.log('Request Headers:', req.headers);
+    console.log('Request Headers IP:', req.headers['x-forwarded-for'];
+    if (req.socket) {
+        console.log(`socket remote address (another way of getting IP): ${req.socket.remoteAddress}`);
+    }
     next();
 });
 
