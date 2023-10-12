@@ -10,7 +10,10 @@ function verifyToken(req, res, next) {
     jwt.verify(token, secretKey, (err, decoded) => {
         if (err) {
             console.log('JWT verification error:', err.message);
+            console.log(token, secretKey);
             return res.status(401).json({ message: 'Token invalid or expired' });
+        } else {
+            console.log('JWT verification successful')
         }
         // Store the decoded information in the request object for use in route handlers
         req.user = decoded;
