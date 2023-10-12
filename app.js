@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const Multer = require('multer');
 const sharp = require('sharp');
 const uuid = require('uuid');
-
+const rateLimit = require('express-rate-limit');
 app.use(bodyParser.json());
 
 const serviceAccount = require('/etc/secrets/FIREBASE_ENV.json');
@@ -28,11 +28,9 @@ app.get('/testing69', function (req, res) {
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    console.log('Request IP:', req.ip);
-    console.log('Request Headers IP:', req.headers['x-forwarded-for']);
-    if (req.socket) {
-        console.log(`socket remote address (another way of getting IP): ${req.socket.remoteAddress}`);
-    }
+
+    //console.log('Request Headers IP:', req.headers['x-forwarded-for']);
+    
     next();
 });
 
@@ -41,7 +39,13 @@ admin.initializeApp({
     storageBucket: process.env.STORAGE_LINK,
 });
 
-app.post("/auth", (req, res) => {
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // Limit to 5 requests per windowMs
+    message: 'Too many login attempts from this IP. Please try again later.',
+});
+
+app.post("/auth", loginLimiter, (req, res) => {
     const sessionId = uuid.v4();
     const userInput = req.body.text;
     // console.log('made it here: ', userInput);
@@ -156,7 +160,7 @@ app.post("/api/upload", upload.single('image'), async (req, res, next) => {
                 })
 
             } else {
-                docRef = admin.firestore().collection('test').doc('podcasts');
+                const docRef = admin.firestore().collection('test').doc('podcasts');
                 docRef.get()
                     .then((doc) => {
                         //console.log('req body: ', req.body);
