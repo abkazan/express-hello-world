@@ -10,7 +10,7 @@ const uuid = require('uuid');
 const rateLimit = require('express-rate-limit');
 app.use(bodyParser.json());
 
-const serviceAccount = require('/etc/secrets/FIREBASE_ENV.json');
+const serviceAccount = require('./etc/secrets/FIREBASE_ENV.json');
 
 app.get('/testing69', function (req, res) {
     const userIP = req.ip;
@@ -45,7 +45,9 @@ const loginLimiter = rateLimit({
     message: 'Too many login attempts from this IP. Please try again later.',
 });
 
-app.post("/auth", loginLimiter, (req, res) => {
+//include the login limiter for final deploy with the following syntax:
+//      app.post("/auth", loginLimiter, (req, res) => {...}
+app.post("/auth", (req, res) => {
     const sessionId = uuid.v4();
     const userInput = req.body.text;
     // console.log('made it here: ', userInput);
