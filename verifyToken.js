@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const secretKey = process.env.secretKey;
+const secretKey = process.env.SECRET_KEY;
 function verifyToken(req, res, next) {
     const token = req.headers.authorization;
     if (!token) {
@@ -9,10 +9,9 @@ function verifyToken(req, res, next) {
 
     jwt.verify(token, secretKey, (err, decoded) => {
         if (err) {
-            console.log('Token invalid or expired');
+            console.log('JWT verification error:', err.message);
             return res.status(401).json({ message: 'Token invalid or expired' });
         }
-
         // Store the decoded information in the request object for use in route handlers
         req.user = decoded;
         next();

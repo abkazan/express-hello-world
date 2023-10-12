@@ -62,7 +62,7 @@ app.post("/auth", (req, res) => {
                 const data = doc.data();
                 bcrypt.compare(userInput, data['key1'], (err, result) => {
                     if (err || !result) {
-                        console.log('Auth failed')
+                        console.log('Auth failed');
                         return res.status(401).json({ "message": 'Authentication failed' });
                     } else {
                         console.log('Auth successful');
