@@ -23,10 +23,14 @@ app.get('/testing69', function (req, res) {
     /* res.send('Hello World!'); */
 });
 
+
+
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
+    res.header("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    console.log('Request IP:', req.ip);
+    console.log('Request Headers:', req.headers);
+    next();
 });
 
 admin.initializeApp({
@@ -58,10 +62,10 @@ app.post("/auth", (req, res) => {
                             maxAge: 24 * 60 * 60 * 1000,
                         });
                         return res.json({ "message": 'Authentication successful' });
-                        
+
                     }
                     // Authentication successful
-                    
+
                 })
             } else {
                 res.json({ "message": "data not found" });
@@ -71,7 +75,7 @@ app.post("/auth", (req, res) => {
             console.log('Error getting document:', error);
             res.status(500).json({ "message": "Internal Server Error" });
         });
-    
+
 });
 
 app.get("/getCurrentImage", (req, res) => {
@@ -114,18 +118,18 @@ const upload = Multer({ storage: Multer.memoryStorage() });
 
 app.post("/api/upload", upload.single('image'), async (req, res, next) => {
     // Get the uploaded file object
-    
+
     const fileBuffer = req.file.buffer;
     const location = req.body.location;
     let retUrl = "";
-    
+
     try {
         const webpBuffer = await sharp(fileBuffer).webp().toBuffer();
         const bucket = admin.storage().bucket();
 
         const fileRef = bucket.file(req.file.originalname.replace(/\.[^.]+$/, '.webp'));
         await fileRef.createWriteStream().end(webpBuffer);
-        
+
         console.log("WebP image uploaded to storage");
         fileRef.getSignedUrl({
             action: 'read',
@@ -147,30 +151,30 @@ app.post("/api/upload", upload.single('image'), async (req, res, next) => {
                         data: newData
                     });
                 })
-                
+
             } else {
-                docRef =  admin.firestore().collection('test').doc('podcasts');
+                docRef = admin.firestore().collection('test').doc('podcasts');
                 docRef.get()
-                .then((doc) => {
-                    //console.log('req body: ', req.body);
-                    if (doc.exists) {
-                        const existingData = doc.data()
-                        console.log(existingData.data.length)
-                        const newData = [
-                            {
-                                title: req.body.title,
-                                desc: req.body.description,
-                                image: url[0],
-                                spotify_link: req.body.spotifyLink,
-                                apple_link: req.body.appleLink,
-                                episode: existingData.data.length + 1
-                            },
-                            ...existingData.data,
-                        ];
-                        docRef.update( {data: newData} );
-                        
-                    }
-                })
+                    .then((doc) => {
+                        //console.log('req body: ', req.body);
+                        if (doc.exists) {
+                            const existingData = doc.data()
+                            console.log(existingData.data.length)
+                            const newData = [
+                                {
+                                    title: req.body.title,
+                                    desc: req.body.description,
+                                    image: url[0],
+                                    spotify_link: req.body.spotifyLink,
+                                    apple_link: req.body.appleLink,
+                                    episode: existingData.data.length + 1
+                                },
+                                ...existingData.data,
+                            ];
+                            docRef.update({ data: newData });
+
+                        }
+                    })
             }
             console.log("image url uploaded to firestore");
             res.send(['File Uploaded Successfully', retUrl]);
@@ -200,7 +204,7 @@ app.get('/api/getPodcasts', (req, res) => {
     })
 });
 
-app.get("/", (req, res) => res.send({"message": "hello from the server!"}));
+app.get("/", (req, res) => res.send({ "message": "hello from the server!" }));
 
 const test = process.env.TEST;
 
