@@ -10,7 +10,7 @@ const uuid = require('uuid');
 const rateLimit = require('express-rate-limit');
 app.use(bodyParser.json());
 
-const serviceAccount = require('./etc/secrets/FIREBASE_ENV.json');
+const serviceAccount = require('/etc/secrets/FIREBASE_ENV.json');
 
 app.get('/testing69', function (req, res) {
     const userIP = req.ip;
