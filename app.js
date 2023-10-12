@@ -121,10 +121,9 @@ app.get("/api", (req, res) => {
 });
 
 const upload = Multer({ storage: Multer.memoryStorage() });
-
-app.post("/api/upload", upload.single('image'), async (req, res, next) => {
+const verifyToken = require('./verifyToken');
+app.post("/api/upload", verifyToken, upload.single('image'), async (req, res, next) => {
     // Get the uploaded file object
-
     const fileBuffer = req.file.buffer;
     const location = req.body.location;
     let retUrl = "";
