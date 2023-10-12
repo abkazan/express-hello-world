@@ -27,7 +27,7 @@ app.get('/testing69', function (req, res) {
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
 
     //console.log('Request Headers IP:', req.headers['x-forwarded-for']);
     
