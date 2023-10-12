@@ -14,7 +14,12 @@ const serviceAccount = require('/etc/secrets/FIREBASE_ENV.json');
 
 app.get('/testing69', function (req, res) {
     const userIP = req.ip;
-    res.json(userIP);
+    const message = "testing some new shit";
+    const responseObj = {
+        message: message,
+        userIp: userIP,
+    };
+    res.json(responseObj);
     /* res.send('Hello World!'); */
 });
 
