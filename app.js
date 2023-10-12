@@ -47,6 +47,8 @@ const loginLimiter = rateLimit({
 
 //include the login limiter for final deploy with the following syntax:
 //      app.post("/auth", loginLimiter, (req, res) => {...}
+const jwt = require('jsonwebtoken');
+const secretKey = process.env.SECRET_KEY;
 app.post("/auth", (req, res) => {
     const sessionId = uuid.v4();
     const userInput = req.body.text;
@@ -64,13 +66,8 @@ app.post("/auth", (req, res) => {
                         return res.status(401).json({ "message": 'Authentication failed' });
                     } else {
                         console.log('Auth successful');
-                        res.cookie('sessionId', sessionId, {
-                            httpOnly: true,
-                            secure: true,
-                            sameSite: 'strict',
-                            maxAge: 24 * 60 * 60 * 1000,
-                        });
-                        return res.json({ "message": 'Authentication successful' });
+                        const token = jwt.sign({ sessionId }, secretKey, {expiresIn: 3600} )
+                        return res.json({ message: 'Authentication successful', token });
 
                     }
                     // Authentication successful
