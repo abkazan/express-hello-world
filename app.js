@@ -8,6 +8,8 @@ const Multer = require('multer');
 const sharp = require('sharp');
 const uuid = require('uuid');
 const rateLimit = require('express-rate-limit');
+const nodemailer = require('nodemailer'); 
+
 app.use(bodyParser.json());
 
 const serviceAccount = require('/etc/secrets/FIREBASE_ENV.json');
@@ -220,13 +222,37 @@ app.get('/api/getPodcasts', (req, res) => {
 
 app.get("/", (req, res) => res.send({ "message": "hello from the server!" }));
 
+const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      user: 'akazan9@gmail.com', // Replace with your Gmail email address
+      pass: process.env.EMAIL_PASS, // Replace with your Gmail password (use an app-specific password for security)
+    },
+  });
+
 app.post('/portfolio/sendMessage', (req, res) => {
     const { name, email, message } = req.body;
     console.log('Received data:');
     console.log('Name:', name);
     console.log('Email:', email);
     console.log('Message:', message);
-    res.status(200).send('Data received and logged.');
+    
+    const mailOptions = {
+        from: 'akazan9@gmail.com',
+        to: 'akazan9@gmail.com', // Replace with your Gmail email address
+        subject: 'New Data Received',
+        text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+      };
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error('Error sending email:', error);
+          res.status(500).send('Internal Server Error: Unable to send email');
+        } else {
+          console.log('Data sent successfully');
+          res.status(200).send('Data received and logged.');
+        }
+      });
+      res.status(200).send('Data received and logged.');
 
 })
 const test = process.env.TEST;
