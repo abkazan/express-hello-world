@@ -241,7 +241,7 @@ app.post('/portfolio/sendMessage', (req, res) => {
     transporter.sendMail({
         from: email,
         to: 'akazan9@gmail.com',
-        subject: 'testing',
+        subject: `New Message from ${Name} via website`,
         text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
     }).then(
         res.status(200).send('Data received and sent.')
