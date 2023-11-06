@@ -223,10 +223,11 @@ app.get('/api/getPodcasts', (req, res) => {
 app.get("/", (req, res) => res.send({ "message": "hello from the server!" }));
 
 const transporter = nodemailer.createTransport({
-    service: 'Gmail',
+    host: 'smtp-relay.sendinblue.com',
+    port: 587,
     auth: {
-      user: 'akazan9@gmail.com', // Replace with your Gmail email address
-      pass: process.env.EMAIL_PASS, // Replace with your Gmail password (use an app-specific password for security)
+        user: 'akazan9@gmail.com',
+        pass: process.env.SMTP_PASS,
     },
   });
 
@@ -253,7 +254,19 @@ app.post('/portfolio/sendMessage', (req, res) => {
         }
       });
        */
-    res.status(200).send('Data received and logged.');
+    transporter.sendMail({
+        from: 'akazan9@gmail.com',
+        to: 'akazan9@gmail.com',
+        subject: 'testing',
+        text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+    }).then(
+        res.status(200).send('Data received and sent.')
+    ).catch((error) => {
+        console.error('Error sending email:', error);
+    }).finally(
+        console.log('made it to end')
+    )
+    
 
 })
 const test = process.env.TEST;
