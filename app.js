@@ -238,24 +238,8 @@ app.post('/portfolio/sendMessage', (req, res) => {
     console.log('Email:', email);
     console.log('Message:', message);
     
-    /* const mailOptions = {
-        from: 'akazan9@gmail.com',
-        to: 'akazan9@gmail.com', // Replace with your Gmail email address
-        subject: 'New Data Received',
-        text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
-      };
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.error('Error sending email:', error);
-          res.status(500).send('Internal Server Error: Unable to send email');
-        } else {
-          console.log('Data sent successfully');
-          res.status(200).send('Data received and logged.');
-        }
-      });
-       */
     transporter.sendMail({
-        from: 'akazan9@gmail.com',
+        from: email,
         to: 'akazan9@gmail.com',
         subject: 'testing',
         text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
