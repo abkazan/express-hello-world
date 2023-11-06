@@ -220,6 +220,15 @@ app.get('/api/getPodcasts', (req, res) => {
 
 app.get("/", (req, res) => res.send({ "message": "hello from the server!" }));
 
+app.post('/portfolio/sendMessage', (req, res) => {
+    const { name, email, message } = req.body;
+    console.log('Received data:');
+    console.log('Name:', name);
+    console.log('Email:', email);
+    console.log('Message:', message);
+    res.status(200).send('Data received and logged.');
+
+})
 const test = process.env.TEST;
 
 
