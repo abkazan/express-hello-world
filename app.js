@@ -237,7 +237,7 @@ app.post('/portfolio/sendMessage', (req, res) => {
     console.log('Email:', email);
     console.log('Message:', message);
     
-    const mailOptions = {
+    /* const mailOptions = {
         from: 'akazan9@gmail.com',
         to: 'akazan9@gmail.com', // Replace with your Gmail email address
         subject: 'New Data Received',
@@ -252,7 +252,8 @@ app.post('/portfolio/sendMessage', (req, res) => {
           res.status(200).send('Data received and logged.');
         }
       });
-      res.status(200).send('Data received and logged.');
+       */
+    res.status(200).send('Data received and logged.');
 
 })
 const test = process.env.TEST;
