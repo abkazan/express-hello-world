@@ -255,7 +255,7 @@ app.post('/portfolio/sendMessage', (req, res) => {
 })
 
 app.post('/bucksin6ix/comment', (req, res) => {
-    let { messsage, title, episode, } = req.body;
+    let { message, title, episode, } = req.body;
     console.log('data recieved: ', req.body);
     transporter.sendMail({
         from: 'akazan9@gmail.com',
