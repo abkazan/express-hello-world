@@ -255,13 +255,13 @@ app.post('/portfolio/sendMessage', (req, res) => {
 })
 
 app.post('/bucksin6ix/comment', (req, res) => {
-    let { comment, title, episode, } = req.body;
+    let { message, title, episode, } = req.body;
     console.log('data recieved: ', req.body);
     transporter.sendMail({
         from: 'akazan9@gmail.com',
         to: 'akazan9@gmail.com',
         subject: `New Comment on episode #${episode}, ${title} `,
-        text: `Comment: ${comment}`,
+        text: `Comment: ${message}`,
     }).then(
         res.status(200).send('Data received and sent.')
     ).catch((error) => {
