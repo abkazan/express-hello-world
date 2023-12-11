@@ -258,7 +258,7 @@ app.post('/bucksin6ix/comment', (req, res) => {
     let { message, title, episode, } = req.body;
     console.log('data recieved: ', req.body);
     let subject = '';
-    if (title === '') {
+    if (title === '' || title === undefined || title === null) {
         subject = 'New Comment from contact page';
     } else {
         subject = `New Comment on episode #${episode}, ${title}`;
