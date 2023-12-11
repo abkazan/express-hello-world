@@ -257,11 +257,16 @@ app.post('/portfolio/sendMessage', (req, res) => {
 app.post('/bucksin6ix/comment', (req, res) => {
     let { message, title, episode, } = req.body;
     console.log('data recieved: ', req.body);
-    
+    let subject = '';
+    if (title === undefined) {
+        subject = 'New Comment from contact page';
+    } else {
+        subject = `New Comment on episode #${episode}, ${title}`;
+    }
     transporter.sendMail({
         from: 'akazan9@gmail.com',
         to: 'akazan9@gmail.com',
-        subject: `${title === undefined ? 'New Comment from contact page': `New Comment on episode #${episode}, ${title} `}`,
+        subject: subject,
         text: `Comment: ${message}`,
     }).then(
         res.status(200).send('Data received and sent.')
