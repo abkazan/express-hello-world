@@ -249,8 +249,26 @@ app.post('/portfolio/sendMessage', (req, res) => {
         console.error('Error sending email:', error);
     }).finally(
         console.log('made it to end')
-    )
+    );
     
+
+})
+
+app.post('/bucksin6ix/comment', (req, res) => {
+    let { comment, email, episode, } = req.body;
+    console.log('data recieved: ', req.body);
+    transporter.sendMail({
+        from: email,
+        to: 'akazan9@gmail.com',
+        subject: `New Comment on episode: ${episode}`,
+        text: `Email: ${email}\nComment: ${comment}`,
+    }).then(
+        res.status(200).send('Data received and sent.')
+    ).catch((error) => {
+        console.error('Error sending email:', error);
+    }).finally(
+        console.log('made it to end')
+    );
 
 })
 const test = process.env.TEST;
