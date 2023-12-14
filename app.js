@@ -264,7 +264,7 @@ app.post('/bucksin6ix/comment', (req, res) => {
         subject = `New Comment on episode #${episode}, ${title}`;
     }
     transporter.sendMail({
-        from: 'doodlebob@gmail.com',
+        from: 'bucksin6ixffsn@gmail.com',
         to: 'akazan9@gmail.com',
         subject: subject,
         text: `Comment: ${message}`,
