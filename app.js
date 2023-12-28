@@ -291,6 +291,7 @@ app.post('/travelAgent/sendData', async (req, res) => {
             model: "gpt-3.5-turbo-1106",
             max_tokens: 100
         });
+        console.log("sending back: ", chatCompletion.choices[0].message.content)
         res.json({status: 'success', message: chatCompletion.choices[0].message.content})
 
     } catch (error) {
