@@ -278,7 +278,7 @@ app.post('/bucksin6ix/comment', (req, res) => {
 
 })
 
-app.post('travelAgent/sendData', (req, res) => {
+app.post('/travelAgent/sendData', (req, res) => {
     console.log(req.body)
     res.json({status: 'success', message: 'Data recieved successfully yayyyy!!!!!'})
 })
