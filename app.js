@@ -289,6 +289,7 @@ app.post('/travelAgent/sendData', async (req, res) => {
         const chatCompletion = await openai.chat.completions.create({
             messages: req.body,
             model: "gpt-3.5-turbo-1106",
+            max_tokens: 100
         });
         res.json({status: 'success', message: chatCompletion.choices[0].message.content})
 
@@ -296,8 +297,6 @@ app.post('/travelAgent/sendData', async (req, res) => {
         console.error("An error occured", error);
         res.status(500).json({status: 'error', message: 'An error occured on the server side'});
     }
-    
-    
 })
 const test = process.env.TEST;
 
