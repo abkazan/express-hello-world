@@ -290,8 +290,7 @@ app.post('/travelAgent/sendData', async (req, res) => {
             messages: req.body,
             model: "gpt-3.5-turbo-1106",
         });
-        console.log(chatCompletion.choices[0].message.content);
-        res.json({status: 'success', message: 'Data recieved successfully yayyyy!!!!!'})
+        res.json({status: 'success', message: chatCompletion.choices[0].message.content})
 
     } catch (error) {
         console.error("An error occured", error);
