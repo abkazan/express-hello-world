@@ -278,9 +278,27 @@ app.post('/bucksin6ix/comment', (req, res) => {
 
 })
 
-app.post('/travelAgent/sendData', (req, res) => {
-    console.log(req.body)
-    res.json({status: 'success', message: 'Data recieved successfully yayyyy!!!!!'})
+const OpenAI = require("openai");
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_KEY
+});
+
+app.post('/travelAgent/sendData', async (req, res) => {
+    console.log(req.body);
+    try {
+        const chatCompletion = await openai.chat.completions.create({
+            messages: req.body,
+            model: "gpt-3.5-turbo-1106",
+        });
+        console.log(chatCompletion.choices[0].message.content);
+        res.json({status: 'success', message: 'Data recieved successfully yayyyy!!!!!'})
+
+    } catch (error) {
+        console.error("An error occured", error);
+        res.status(500).json({status: 'error', message: 'An error occured on the server side'});
+    }
+    
+    
 })
 const test = process.env.TEST;
 
