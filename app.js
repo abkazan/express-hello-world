@@ -290,7 +290,9 @@ app.post('/travelAgent/sendData', async (req, res) => {
             messages: req.body,
             model: "gpt-3.5-turbo-1106"
         });
-        console.log("sending back: ", chatCompletion.choices[0].message.content)
+        console.log('sending back: \n')
+        console.log(`${chatCompletion.choices[0].message.content}`)
+       /*  console.log("sending back: ", chatCompletion.choices[0].message.content) */
         res.json({status: 'success', message: chatCompletion.choices[0].message.content})
 
     } catch (error) {
@@ -298,6 +300,7 @@ app.post('/travelAgent/sendData', async (req, res) => {
         res.status(500).json({status: 'error', message: 'An error occured on the server side'});
     }
 })
+
 const test = process.env.TEST;
 
 
