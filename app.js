@@ -284,6 +284,8 @@ const openai = new OpenAI({
 });
 
 app.post('/travelAgent/sendData', async (req, res) => {
+    
+    
     console.log(req.body);
     try {
         const chatCompletion = await openai.chat.completions.create({
@@ -299,6 +301,20 @@ app.post('/travelAgent/sendData', async (req, res) => {
         console.error("An error occured", error);
         res.status(500).json({status: 'error', message: 'An error occured on the server side'});
     }
+
+    // update api usage field in db:
+    const db = admin.firestore();
+    const docRef = db.collection('chattrip').doc('API usage');
+    docRef.update({
+        number_of_calls: admin.firestore.FieldValue.increment(1)  
+      })
+        .then(() => {
+          console.log('Document successfully updated');
+        })
+        .catch((error) => {
+          console.error('Error updating document:', error);
+    });
+
 })
 
 const test = process.env.TEST;
