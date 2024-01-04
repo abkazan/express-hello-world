@@ -285,15 +285,17 @@ const openai = new OpenAI({
 
 app.post('/travelAgent/sendData', async (req, res) => {
 
-    console.log(`ip: ${req.ip}`)
+    console.log(`the ip: ${req.ip}`)
     console.log(req.body);
     try {
         const chatCompletion = await openai.chat.completions.create({
             messages: req.body,
             model: "gpt-3.5-turbo-1106"
         });
-        console.log('sending back: \n')
-        console.log(chatCompletion.choices[0].message.content.split('\n'))
+        console.log('sending back message')
+        /* console.log('sending back: \n')
+        
+        console.log(chatCompletion.choices[0].message.content.split('\n')) */
         /*  console.log("sending back: ", chatCompletion.choices[0].message.content) */
         res.json({ status: 'success', message: chatCompletion.choices[0].message.content })
 
