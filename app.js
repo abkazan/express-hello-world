@@ -285,7 +285,7 @@ const openai = new OpenAI({
 
 app.post('/travelAgent/sendData', async (req, res) => {
 
-
+    console.log(`ip: ${req.ip}`)
     console.log(req.body);
     try {
         const chatCompletion = await openai.chat.completions.create({
