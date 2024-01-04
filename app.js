@@ -8,7 +8,7 @@ const Multer = require('multer');
 const sharp = require('sharp');
 const uuid = require('uuid');
 const rateLimit = require('express-rate-limit');
-const nodemailer = require('nodemailer'); 
+const nodemailer = require('nodemailer');
 
 app.use(bodyParser.json());
 
@@ -32,7 +32,7 @@ app.use((req, res, next) => {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
 
     //console.log('Request Headers IP:', req.headers['x-forwarded-for']);
-    
+
     next();
 });
 
@@ -68,7 +68,7 @@ app.post("/auth", (req, res) => {
                         return res.status(401).json({ "message": 'Authentication failed' });
                     } else {
                         console.log('Auth successful');
-                        const token = jwt.sign({ sessionId }, secretKey, {expiresIn: 3600} )
+                        const token = jwt.sign({ sessionId }, secretKey, { expiresIn: 3600 })
                         return res.json({ message: 'Authentication successful', token });
 
                     }
@@ -132,7 +132,7 @@ const verifyToken = require('./verifyToken');
 app.post("/api/upload", verifyToken, upload.single('image'), async (req, res, next) => {
     // Get the uploaded file object
     if (req.body.verification) {
-        res.send({'message': 'verified'});
+        res.send({ 'message': 'verified' });
         return;
     }
     const fileBuffer = req.file.buffer;
@@ -229,7 +229,7 @@ const transporter = nodemailer.createTransport({
         user: 'akazan9@gmail.com',
         pass: process.env.SMTP_PASS,
     },
-  });
+});
 
 app.post('/portfolio/sendMessage', (req, res) => {
     const { name, email, message } = req.body;
@@ -237,7 +237,7 @@ app.post('/portfolio/sendMessage', (req, res) => {
     console.log('Name:', name);
     console.log('Email:', email);
     console.log('Message:', message);
-    
+
     transporter.sendMail({
         from: email,
         to: 'akazan9@gmail.com',
@@ -250,7 +250,7 @@ app.post('/portfolio/sendMessage', (req, res) => {
     }).finally(
         console.log('made it to end')
     );
-    
+
 
 })
 
@@ -284,8 +284,8 @@ const openai = new OpenAI({
 });
 
 app.post('/travelAgent/sendData', async (req, res) => {
-    
-    
+
+
     console.log(req.body);
     try {
         const chatCompletion = await openai.chat.completions.create({
@@ -294,26 +294,26 @@ app.post('/travelAgent/sendData', async (req, res) => {
         });
         console.log('sending back: \n')
         console.log(chatCompletion.choices[0].message.content.split('\n'))
-       /*  console.log("sending back: ", chatCompletion.choices[0].message.content) */
-        res.json({status: 'success', message: chatCompletion.choices[0].message.content})
+        /*  console.log("sending back: ", chatCompletion.choices[0].message.content) */
+        res.json({ status: 'success', message: chatCompletion.choices[0].message.content })
 
     } catch (error) {
         console.error("An error occured", error);
-        res.status(500).json({status: 'error', message: 'An error occured on the server side'});
+        res.status(500).json({ status: 'error', message: 'An error occured on the server side' });
     }
 
     // update api usage field in db:
     const db = admin.firestore();
     const docRef = db.collection('chattrip').doc('API usage');
     docRef.update({
-        number_of_calls: admin.firestore.FieldValue.increment(1)  
-      })
+        number_of_calls: admin.firestore.FieldValue.increment(1)
+    })
         .then(() => {
-          console.log('Document successfully updated');
+            console.log('Document successfully updated');
         })
         .catch((error) => {
-          console.error('Error updating document:', error);
-    });
+            console.error('Error updating document:', error);
+        });
 
 })
 
