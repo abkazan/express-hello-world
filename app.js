@@ -283,9 +283,14 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_KEY
 });
 
-app.post('/travelAgent/sendData', async (req, res) => {
+//i might delete this:
+app.set('trust proxy', true);
 
-    console.log(`the ip: ${req.ip}`)
+
+app.post('/travelAgent/sendData', async (req, res) => {
+    const clientIP = req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    console.log('Client IP:', clientIP);
+    /* console.log(`the ip: ${req.ip}`) */
     console.log(req.body);
     try {
         const chatCompletion = await openai.chat.completions.create({
