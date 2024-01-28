@@ -265,7 +265,7 @@ app.post('/bucksin6ix/comment', (req, res) => {
     }
     transporter.sendMail({
         from: 'bucksin6ixffsn@gmail.com',
-        to: 'akazan9@gmail.com',
+        to: ['akazan9@gmail.com', 'herscheywinkelman@gmail.com', 'stevendorf27@gmail.com'],
         subject: subject,
         text: `Comment: ${message}`,
     }).then(
