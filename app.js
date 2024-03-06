@@ -324,14 +324,11 @@ app.post('/call-rail-test', (req, res) => {
     const callData = req.body;
 
     // Extract caller ID and other relevant information
-    console.log('request body: ', req.body);
-    const callerId = callData.caller;
+    /* console.log('request body: ', req.body); */
     
-    console.log(callerId);
-    // Implement your conditional routing logic based on caller ID
-    // ...
-
-    // Respond to Call Rail's webhook notification (usually a success code)
+    
+    console.log(`call received from ${callData["customer_name"]} at number ${callData["customer_phone_number"]}`);
+    
     res.sendStatus(200);
 });
 
