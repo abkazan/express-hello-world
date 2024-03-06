@@ -324,6 +324,7 @@ app.post('/call-rail-test', (req, res) => {
     const callData = req.body;
 
     // Extract caller ID and other relevant information
+    console.log('request body: ', req.body);
     const callerId = callData.caller;
     
     console.log(callerId);
