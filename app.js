@@ -122,10 +122,6 @@ app.get("/api", (req, res) => {
 
 });
 
-
-
-
-
 const upload = Multer({ storage: Multer.memoryStorage() });
 const verifyToken = require('./verifyToken');
 
@@ -323,6 +319,20 @@ app.post('/travelAgent/sendData', async (req, res) => {
         });
 
 })
+
+app.post('/call-rail-test', (req, res) => {
+    const callData = req.body;
+
+    // Extract caller ID and other relevant information
+    const callerId = callData.caller;
+    
+    console.log(callerId);
+    // Implement your conditional routing logic based on caller ID
+    // ...
+
+    // Respond to Call Rail's webhook notification (usually a success code)
+    res.sendStatus(200);
+});
 
 const test = process.env.TEST;
 
