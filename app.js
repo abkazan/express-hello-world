@@ -320,15 +320,17 @@ app.post('/travelAgent/sendData', async (req, res) => {
 
 })
 
-app.post('/call-rail-test', (req, res) => {
-    const callData = req.body;
-
-    // Extract caller ID and other relevant information
-    /* console.log('request body: ', req.body); */
-    
-    
-    console.log(`call received from ${callData["customer_name"]} at number ${callData["customer_phone_number"]}`);
-    
+app.post('/callRouterdb', async (req, res) => {
+    try {
+        const logToAdd = req.body.message;
+        // Extract caller ID and other relevant information
+        /* console.log('request body: ', req.body); */
+        const doc = await admin.firestore().collection('call-router').doc('logs').get();
+        let todaysLogs = doc.data()['todaysLogs']
+        console.log(todaysLogs);
+    } catch (err) {
+        console.error('Error retrieving data', err);
+    }
     res.sendStatus(200);
 });
 
