@@ -326,8 +326,9 @@ app.post('/callRouterdb', async (req, res) => {
         // Extract caller ID and other relevant information
         /* console.log('request body: ', req.body); */
         const doc = await admin.firestore().collection('call-router').doc('logs').get();
-        let todaysLogs = doc.data()['todaysLogs']
-        console.log(todaysLogs);
+        let todaysLogs = doc.data()['todaysLogs'];
+        todaysLogs.push(logToAdd);
+        await docRef.update({ ['todaysLogs']: todaysLogs });
     } catch (err) {
         console.error('Error retrieving data', err);
     }
