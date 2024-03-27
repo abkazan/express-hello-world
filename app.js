@@ -336,7 +336,7 @@ app.post('/callRouterdb', async (req, res) => {
         console.error('Error retrieving data', err);
         res.sendStatus(403);
     }
-    res.sendStatus(200);
+
 });
 
 const test = process.env.TEST;
