@@ -320,7 +320,7 @@ app.post('/travelAgent/sendData', async (req, res) => {
 
 })
 
-app.post('/callRouterdb', async (req, res) => {
+app.post('/callRouter/logCall', async (req, res) => {
     try {
         const logToAdd = req.body.message;
         // Extract caller ID and other relevant information
@@ -336,7 +336,25 @@ app.post('/callRouterdb', async (req, res) => {
         console.error('Error retrieving data', err);
         res.sendStatus(403);
     }
+});
 
+app.get('/callRouter/getLogs', (req, res) => {
+    console.log('made it to the endpoint');
+    const db = admin.firestore();
+    const today = new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+    db.collection('call-router').doc('logs').get().then((doc) => {
+        if (doc.exists) {
+            const data = doc.data()[today];
+            console.log('doc found');
+            console.log(data);
+            res.json({ data });
+        } else {
+            res.json({ "error": [] });
+        }
+    }).catch((error) => {
+        console.log('Error getting document:', error);
+        res.status(500).json({ "error": "Internal Server Error" });
+    })
 });
 
 const test = process.env.TEST;
