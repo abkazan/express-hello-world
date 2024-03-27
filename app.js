@@ -325,12 +325,13 @@ app.post('/callRouterdb', async (req, res) => {
         const logToAdd = req.body.message;
         // Extract caller ID and other relevant information
         /* console.log('request body: ', req.body); */
+        const today = new Date().toLocaleDateString('en-US', { day: 'short', month: 'short', year: 'numeric' });
         const docRef = admin.firestore().collection('call-router').doc('logs');
-        const doc = await admin.firestore().collection('call-router').doc('logs').get();
-        let todaysLogs = doc.data()['todaysLogs'];
-        todaysLogs = [logToAdd, ...todaysLogs];
-        //todaysLogs.push(logToAdd);
-        await docRef.update({ ['todaysLogs']: todaysLogs });
+        const doc = await docRef.get();
+        const todaysLogs = doc.exists && doc.data().hasOwnProperty(today) ? doc.data()[today] : [];
+        const updatedLogs = [logToAdd, ...todaysLogs];
+        await docRef.update({ [today]: updatedLogs });
+        res.sendStatus(200);
     } catch (err) {
         console.error('Error retrieving data', err);
         res.sendStatus(403);
