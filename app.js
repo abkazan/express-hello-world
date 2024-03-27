@@ -345,8 +345,7 @@ app.get('/callRouter/getLogs', (req, res) => {
     db.collection('call-router').doc('logs').get().then((doc) => {
         if (doc.exists) {
             const data = doc.data()[today];
-            console.log('doc found');
-            console.log(data);
+            console.log('doc found, returning data');
             res.json({ data });
         } else {
             res.json({ "error": [] });
