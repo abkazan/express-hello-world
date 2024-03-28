@@ -325,7 +325,8 @@ app.post('/callRouter/logCall', async (req, res) => {
         const logToAdd = req.body.message;
         // Extract caller ID and other relevant information
         /* console.log('request body: ', req.body); */
-        const today = new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+        const today = new Date().toLocaleDateString('en-US', { timeZone: 'America/Chicago', month: 'short', day: '2-digit', year: 'numeric' });
+        console.log(`Today's date: ${today}`);
         const docRef = admin.firestore().collection('call-router').doc('logs');
         const doc = await docRef.get();
         const todaysLogs = doc.exists && doc.data().hasOwnProperty(today) ? doc.data()[today] : [];
