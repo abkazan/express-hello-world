@@ -342,7 +342,7 @@ app.post('/callRouter/logCall', async (req, res) => {
 app.get('/callRouter/getLogs', (req, res) => {
     console.log('made it to the endpoint');
     const db = admin.firestore();
-    const today = new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+    const today = new Date().toLocaleDateString('en-US', { timeZone: 'America/Chicago', month: 'short', day: '2-digit', year: 'numeric' });
     db.collection('call-router').doc('logs').get().then((doc) => {
         if (doc.exists) {
             const data = doc.data()[today];
