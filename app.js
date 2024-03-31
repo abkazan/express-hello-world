@@ -326,7 +326,7 @@ app.post('/callRouter/logCall', async (req, res) => {
         // Extract caller ID and other relevant information
         /* console.log('request body: ', req.body); */
         const today = new Date().toLocaleDateString('en-US', { timeZone: 'America/Chicago', month: 'short', day: '2-digit', year: 'numeric' });
-        console.log(`Today's date: ${today}`);
+        //console.log(`Today's date: ${today}`);
         const docRef = admin.firestore().collection('call-router').doc('logs');
         const doc = await docRef.get();
         const todaysLogs = doc.exists && doc.data().hasOwnProperty(today) ? doc.data()[today] : [];
@@ -340,13 +340,11 @@ app.post('/callRouter/logCall', async (req, res) => {
 });
 
 app.get('/callRouter/getLogs', (req, res) => {
-    console.log('made it to the endpoint');
     const db = admin.firestore();
     const today = new Date().toLocaleDateString('en-US', { timeZone: 'America/Chicago', month: 'short', day: '2-digit', year: 'numeric' });
     db.collection('call-router').doc('logs').get().then((doc) => {
         if (doc.exists) {
             const data = doc.data()[today];
-            console.log('doc found, returning data');
             res.json({ data });
         } else {
             res.json({ "error": [] });
